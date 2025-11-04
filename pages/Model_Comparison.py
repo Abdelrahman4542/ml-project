@@ -49,7 +49,7 @@ metrics = {
 df_metrics = pd.DataFrame(metrics)
 
 st.subheader("📈 Performance Metrics Table")
-st.dataframe(df_metrics.set_index('Model'), use_container_width=True)
+st.dataframe(df_metrics.set_index('Model'), width='stretch')
 
 st.subheader("📊 Visual Comparison")
 

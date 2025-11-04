@@ -86,7 +86,7 @@ col1, col2 = st.columns([1, 1])
 with col1:
     st.header("📊 Dataset Overview")
     st.write(f"**Total Samples:** {len(full_data)}")
-    st.dataframe(full_data.head(10), use_container_width=True)
+    st.dataframe(full_data.head(10), width='stretch')
 
 with col2:
     st.header("📈 Class Distribution")
@@ -189,7 +189,7 @@ if uploaded_file is not None:
     try:
         batch_data = pd.read_csv(uploaded_file)
         st.write("### 📊 Uploaded Data Preview")
-        st.dataframe(batch_data.head(), use_container_width=True)
+        st.dataframe(batch_data.head(), width='stretch')
         
         required_columns = X.columns.tolist()
         missing_columns = [col for col in required_columns if col not in batch_data.columns]
@@ -214,7 +214,7 @@ if uploaded_file is not None:
                 results_df['Prediction_Code'] = predictions
                 
                 st.write("### 📊 Prediction Results")
-                st.dataframe(results_df, use_container_width=True)
+                st.dataframe(results_df, width='stretch')
                 
                 st.write(f"**Summary:** {len(results_df)} predictions made")
                 benign_count = sum(predictions == 1)
