@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.preprocessing import StandardScaler
 
 # -----------------------------
 # Load Dataset
@@ -28,8 +29,12 @@ X, Y, full_data = load_data()
 # -----------------------------
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
 
-log_model = LogisticRegression(max_iter=200)
-log_model.fit(X_train, Y_train)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+log_model = LogisticRegression(max_iter=1000)
+log_model.fit(X_train_scaled, Y_train)
 
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(X_train, Y_train)
@@ -53,7 +58,7 @@ st.write(full_data['diagnosis'].value_counts())
 st.header("⚡ Model Performance")
 
 # Logistic Regression
-y_pred_log = log_model.predict(X_test)
+y_pred_log = log_model.predict(X_test_scaled)
 st.subheader("Logistic Regression")
 st.write(f"Accuracy: {accuracy_score(Y_test, y_pred_log):.2f}")
 st.write(f"Precision: {precision_score(Y_test, y_pred_log):.2f}")
@@ -82,8 +87,9 @@ def user_input():
 
 if st.checkbox("Enter Patient Data"):
     input_data = user_input()
+    input_data_scaled = scaler.transform(input_data)
 
-    log_prediction = log_model.predict(input_data)[0]
+    log_prediction = log_model.predict(input_data_scaled)[0]
     rf_prediction = rf_model.predict(input_data)[0]
 
     st.subheader("Prediction Results")
