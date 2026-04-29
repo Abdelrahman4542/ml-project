@@ -17,7 +17,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.title("🔬 Breast Cancer Prediction App")
+st.title(" Breast Cancer Prediction App")
 st.markdown("""
 <style>
     .main-header {
@@ -61,11 +61,11 @@ def train_models():
 
 log_model, rf_model = train_models()
 
-st.sidebar.title("⚙️ Settings")
+st.sidebar.title(" Settings")
 st.sidebar.markdown("---")
 
 selected_model = st.sidebar.selectbox(
-    "🤖 Select Model for Predictions",
+    " Select Model for Predictions",
     ["Logistic Regression", "Random Forest"],
     help="Choose which model to use for single and batch predictions"
 )
@@ -73,7 +73,7 @@ selected_model = st.sidebar.selectbox(
 st.sidebar.markdown("---")
 st.sidebar.info(f"**Current Model:** {selected_model}")
 st.sidebar.markdown("""
-### 📌 About
+###  About
 This application uses machine learning to classify breast tumors.
 - **M**: Malignant (Cancerous)
 - **B**: Benign (Non-cancerous)
@@ -84,12 +84,12 @@ st.divider()
 col1, col2 = st.columns([1, 1])
 
 with col1:
-    st.header("📊 Dataset Overview")
+    st.header(" Dataset Overview")
     st.write(f"**Total Samples:** {len(full_data)}")
     st.dataframe(full_data.head(10), width='stretch')
 
 with col2:
-    st.header("📈 Class Distribution")
+    st.header(" Class Distribution")
     diagnosis_counts = full_data['diagnosis'].value_counts()
     
     fig, ax = plt.subplots(figsize=(6, 4))
@@ -101,7 +101,7 @@ with col2:
 
 st.divider()
 
-st.header("🔥 Feature Correlation Heatmap")
+st.header(" Feature Correlation Heatmap")
 st.write("Visualizing correlations between different features in the dataset")
 
 fig, ax = plt.subplots(figsize=(16, 12))
@@ -115,7 +115,7 @@ st.pyplot(fig)
 
 st.divider()
 
-st.header("⚡ Model Performance")
+st.header(" Model Performance")
 
 col1, col2 = st.columns(2)
 
@@ -123,14 +123,14 @@ y_pred_log = log_model.predict(X_test_scaled)
 y_pred_rf = rf_model.predict(X_test)
 
 with col1:
-    st.subheader("🤖 Logistic Regression")
+    st.subheader(" Logistic Regression")
     st.metric("Accuracy", f"{accuracy_score(Y_test, y_pred_log):.2%}")
     st.metric("Precision", f"{precision_score(Y_test, y_pred_log):.2%}")
     st.metric("Recall", f"{recall_score(Y_test, y_pred_log):.2%}")
     st.metric("F1-Score", f"{f1_score(Y_test, y_pred_log):.2%}")
 
 with col2:
-    st.subheader("🌲 Random Forest")
+    st.subheader(" Random Forest")
     st.metric("Accuracy", f"{accuracy_score(Y_test, y_pred_rf):.2%}")
     st.metric("Precision", f"{precision_score(Y_test, y_pred_rf):.2%}")
     st.metric("Recall", f"{recall_score(Y_test, y_pred_rf):.2%}")
@@ -138,9 +138,9 @@ with col2:
 
 st.divider()
 
-st.header("🧑‍⚕️ Single Patient Prediction")
+st.header(" Single Patient Prediction")
 
-with st.expander("📝 Enter Patient Data for Prediction", expanded=False):
+with st.expander(" Enter Patient Data for Prediction", expanded=False):
     st.write(f"Using **{selected_model}** for prediction")
     
     cols = st.columns(3)
@@ -157,7 +157,7 @@ with st.expander("📝 Enter Patient Data for Prediction", expanded=False):
             )
             features.append(value)
     
-    if st.button("🔍 Make Prediction", type="primary"):
+    if st.button(" Make Prediction", type="primary"):
         input_data = np.array(features).reshape(1, -1)
         
         if selected_model == "Logistic Regression":
@@ -172,15 +172,15 @@ with st.expander("📝 Enter Patient Data for Prediction", expanded=False):
         confidence = probability[prediction] * 100
         
         if result == "Benign":
-            st.success(f"### ✅ Prediction: **{result}**")
+            st.success(f"###  Prediction: **{result}**")
             st.info(f"Confidence: **{confidence:.2f}%**")
         else:
-            st.error(f"### ⚠️ Prediction: **{result}**")
+            st.error(f"###  Prediction: **{result}**")
             st.warning(f"Confidence: **{confidence:.2f}%**")
 
 st.divider()
 
-st.header("📂 Batch Prediction from CSV")
+st.header(" Batch Prediction from CSV")
 st.write(f"Upload a CSV file with patient data to get predictions using **{selected_model}**")
 
 uploaded_file = st.file_uploader("Choose a CSV file", type=['csv'], help="Upload CSV with same features as training data")
@@ -188,18 +188,18 @@ uploaded_file = st.file_uploader("Choose a CSV file", type=['csv'], help="Upload
 if uploaded_file is not None:
     try:
         batch_data = pd.read_csv(uploaded_file)
-        st.write("### 📊 Uploaded Data Preview")
+        st.write("###  Uploaded Data Preview")
         st.dataframe(batch_data.head(), width='stretch')
         
         required_columns = X.columns.tolist()
         missing_columns = [col for col in required_columns if col not in batch_data.columns]
         
         if missing_columns:
-            st.error(f"❌ Missing columns: {', '.join(missing_columns)}")
+            st.error(f" Missing columns: {', '.join(missing_columns)}")
         else:
             batch_features = batch_data[required_columns]
             
-            if st.button("🚀 Run Batch Predictions", type="primary"):
+            if st.button(" Run Batch Predictions", type="primary"):
                 if selected_model == "Logistic Regression":
                     batch_scaled = scaler.transform(batch_features)
                     predictions = log_model.predict(batch_scaled)
@@ -213,7 +213,7 @@ if uploaded_file is not None:
                 results_df['Confidence'] = [f"{max(prob)*100:.2f}%" for prob in probabilities]
                 results_df['Prediction_Code'] = predictions
                 
-                st.write("### 📊 Prediction Results")
+                st.write("###  Prediction Results")
                 st.dataframe(results_df, width='stretch')
                 
                 st.write(f"**Summary:** {len(results_df)} predictions made")
@@ -227,7 +227,7 @@ if uploaded_file is not None:
                 csv_buffer.seek(0)
                 
                 st.download_button(
-                    label="📥 Download Results as CSV",
+                    label=" Download Results as CSV",
                     data=csv_buffer,
                     file_name="breast_cancer_predictions.csv",
                     mime="text/csv",
@@ -235,8 +235,10 @@ if uploaded_file is not None:
                 )
                 
     except Exception as e:
-        st.error(f"❌ Error processing file: {str(e)}")
+        st.error(f" Error processing file: {str(e)}")
 
 st.divider()
 st.markdown("---")
-st.caption("💡 Tip: Visit the **Model Comparison** page to see detailed performance visualizations!")
+st.caption(" Tip: Visit the **Model Comparison** page to see detailed performance visualizations!")
+
+#streamlit run ml_project_ui.py --server.address localhost
